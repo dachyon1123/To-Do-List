@@ -1,0 +1,5 @@
+.long-press-animation {
+    background: linear-gradient(to left, white 50%, rgb(165 243 252) 50%) right;
+    background-size: 200%;
+    transition: 3s;
+}
