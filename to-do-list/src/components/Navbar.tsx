@@ -1,21 +1,31 @@
 import { useState, useEffect } from "react"
 import '../styles/animations.css'
 
-export default function Navbar({ items, setItems }) {
+interface NavbarProps {
+    items: { listName: string; importance: string; id: number }[];
+    setItems: (items: { listName: string; importance: string; id: number }[]) => void;
+}
+
+interface Categories {
+    name: string;
+    value: string;
+}
+
+export default function Navbar({ items, setItems }: NavbarProps) {
     const [itemState, setItemState] = useState<string>('');
     const [category, setCategory] = useState<string>('');
-    const [catError, setCatError] = useState<string>('');
+    const [catError, setCatError] = useState<string>('border-2 border-black');
     const [itemError, setItemError] = useState<string>('');
-    const [id, setId] = useState<number>(0);
+    const [id, setId] = useState<number>(() => {
+        const savedItems = localStorage.getItem('To-Do-List');
+        const list = savedItems ? JSON.parse(savedItems) : []
+        return list ? list[list.length - 1].id + 1 : 0
+    });
     const [mouseDown, setMouseDown] = useState<number>(0);
     const [mouseUp, setMouseUp] = useState<number>(0);
     const [effect, setEffect] = useState<string>('')
+    const [longPress, setLongPress] = useState<string>('long-press-animation')
 
-
-    interface Categories {
-        name: String,
-        value: String
-    }
 
     const categories: Categories[] = [
         { name: "Least Important", value: "leastImportant" },
@@ -25,31 +35,32 @@ export default function Navbar({ items, setItems }) {
 
 
 
+
     function addItems(e: any) {
         e.preventDefault();
 
         let hasError = false;
 
         if (itemState === '' || itemState === undefined) {
-            setItemError('bg-red-300');
+            setItemError('border-2 border-red-700');
             hasError = true;
         } else {
             setItemError('')
         }
 
         if (category === '' || category === undefined) {
-            setCatError('bg-red-300');
+            setCatError('border-2 border-red-700');
             if (hasError === false) {
                 hasError = true;
             }
         } else {
-            setCatError('')
+            setCatError('border-2 border-black')
         }
 
         if (hasError) {
             return; // Exit the function if there is an error
         }
-        
+
         setItems([...items, { listName: itemState, importance: category, id: id }]);
         setId(id + 1)
     }
@@ -58,20 +69,27 @@ export default function Navbar({ items, setItems }) {
         const delay = 3000;
         const pressTime = mouseUp - mouseDown
 
-        console.log(pressTime)
-
         if (pressTime > delay) {
             setItems([])
         }
     }, [mouseUp])
 
-    // useEffect(() => {
-    //     console.log(mouseDown)
-    // }, [mouseDown])
+    function handleMouseDown() {
+        setMouseDown(Date.now());
+        setLongPress('long-press-animation')
+        setEffect('bg-left')
+    }
 
-    // useEffect(() => {
-    //     console.log(mouseUp)
-    // }, [mouseUp])
+    function handleMouseUp() {
+        setMouseUp(Date.now());
+        setLongPress('inital-background')
+        setEffect('bg-right')
+    }
+
+useEffect(() => {
+    localStorage.setItem("To-Do-List", JSON.stringify(items))
+}, [items])
+
 
     return (
         <nav className="flex justify-between items-center py-4">
@@ -79,21 +97,21 @@ export default function Navbar({ items, setItems }) {
 
             <form className="flex gap-4 w-1/3 justify-center">
                 <input type="text" name="listItem" id="listItem" className={`border-black border-2 p-2 ${itemError}`} onChange={(e) => { setItemState(e.target.value) }} placeholder="Add Item..." />
-                <select name="dropdown" id="dropdown" onChange={(e) => setCategory(e.target.value)} className={`w-56 p-2 appearance-none bg-downArrow bg-no-repeat bg-right bg-cyan-200 ${catError}`} >
+                <select name="dropdown" id="dropdown" onChange={(e) => setCategory(e.target.value)} className={`w-56 p-2 appearance-none bg-downArrow bg-no-repeat bg-right ${catError}`} >
                     <option value="">Select Importance</option>
                     {categories.map((cat, index) => (
                         <option value={cat.value} key={index}>{cat.name}</option>
                     ))}
                 </select>
                 <button
-                    className="border-black border-[1px] rounded-md p-2 cursor-pointer text-md"
+                    className="border-black border-[1px] rounded-md p-2 cursor-pointer text-md hover:bg-violet-300"
                     onClick={addItems}>
                     Add Item
                 </button>
             </form>
 
             <section className="flex gap-4 pr-10">
-                <button className={`long-press-animation text-xl border-black border-[1px] rounded-md p-2 ${effect}`} onMouseDown={() => {setMouseDown(Date.now()); setEffect('bg-left')}} onMouseUp={() => {setMouseUp(Date.now()); setEffect('')}}>Clear List</button>
+                <button className={`${longPress} text-xl border-black border-[1px] rounded-md p-2 ${effect}`} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>Clear List</button>
                 <button className="text-xl border-black border-[1px] rounded-md p-2">Copy List</button>
             </section>
         </nav>

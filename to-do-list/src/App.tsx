@@ -5,7 +5,10 @@ import Navbar from './components/Navbar'
 import ToDoList from './components/ToDoList'
 
 function App() {
-  const [items, setItems] = useState<itemList[]>([]);
+  const [items, setItems] = useState<itemList[]>(() => {
+    const savedItems = localStorage.getItem('To-Do-List');
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
 
   interface itemList {
     listName: string,
@@ -13,15 +16,10 @@ function App() {
     id: number
   }
 
-
-  useEffect(() => {
-    console.log(items)
-  }, [items])
-
-  function deleteButton(id:number) {
-     let newArray: itemList[] = items.filter(item => item.id !== id);
-     console.log(newArray)
-     setItems(newArray);
+  function deleteButton(id: number) {
+    let newArray: itemList[] = items.filter(item => item.id !== id);
+    console.log(newArray)
+    setItems(newArray);
   }
 
   return (

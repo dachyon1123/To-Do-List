@@ -3,3 +3,7 @@
     background-size: 200%;
     transition: 3s;
 }
+
+.initial-background {
+    background-color: white;
+}

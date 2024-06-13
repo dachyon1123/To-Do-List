@@ -11,7 +11,8 @@ export default {
       },
       backgroundImage: {
         'downArrow': "url('../src/assets/svgs/downArrow.svg')",
-        'deleteButton': "url('../src/assets/svgs/deleteButton.svg')"
+        'deleteButton': "url('../src/assets/svgs/deleteButton.svg')",
+        'dots': "url('../src/assets/svgs/dots.svg')",
       }
     },
   },
