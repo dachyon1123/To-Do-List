@@ -19,7 +19,7 @@ export default function Navbar({ items, setItems }: NavbarProps) {
     const [id, setId] = useState<number>(() => {
         const savedItems = localStorage.getItem('To-Do-List');
         const list = savedItems ? JSON.parse(savedItems) : []
-        return list ? list[list.length - 1].id + 1 : 0
+        return list.length !== 0 ? list[list.length - 1].id + 1 : 0
     });
     const [mouseDown, setMouseDown] = useState<number>(0);
     const [mouseUp, setMouseUp] = useState<number>(0);
@@ -71,6 +71,7 @@ export default function Navbar({ items, setItems }: NavbarProps) {
 
         if (pressTime > delay) {
             setItems([])
+            setId(0)
         }
     }, [mouseUp])
 
