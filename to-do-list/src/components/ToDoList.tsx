@@ -2,12 +2,13 @@ import ListComponent from "./ListComponent"
 
 interface ToDoListProps {
     type: string;
+  // NOTE: This type is used a lot. Would probably be better to abstract it to a shared file/package or define and export it from one place.
     items: {
         listName: string;
         importance: string;
         id: number;
     }[];
-    deleteButton: (id: number) => void;
+    deleteButton: (id: number) => void; // NOTE: This name is unclear. I'd prefer `onDelete` or `handleDelete`. 
 }
 export default function ToDoList({ type, items, deleteButton }: ToDoListProps) {
 

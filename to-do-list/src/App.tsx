@@ -8,6 +8,9 @@ import ToDoList from './components/ToDoList'
 import { arrayMove } from '@dnd-kit/sortable'
 
 function App() {
+  /* QUESTION:
+   * Why did you set initial state this way as opposed to using something like 'useEffect'
+   */
   const [items, setItems] = useState<itemList[]>(() => {
     const savedItems = localStorage.getItem('To-Do-List');
     return savedItems ? JSON.parse(savedItems) : [];
@@ -15,7 +18,7 @@ function App() {
 
   interface itemList {
     listName: string,
-    importance: string,
+    importance: string, // NOTE: I would make this and the listName an ENUM
     id: number
   }
 
