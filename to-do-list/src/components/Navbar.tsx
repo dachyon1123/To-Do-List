@@ -51,7 +51,7 @@ export default function Navbar({ items, setItems }: NavbarProps) {
         let hasError = false;
 
         if (itemState === '' || itemState === undefined) {
-            setItemError('border-2 border-red-700');
+            setItemError('border-2 border-red-700'); // NOTE: This seems like an odd way to handle error styling. I think conditional styling using the clsx package or a ternery would be better suited and keep the code cleaner.
             hasError = true;
         } else {
             setItemError('')
@@ -67,7 +67,7 @@ export default function Navbar({ items, setItems }: NavbarProps) {
         }
 
         if (hasError) {
-            return; // Exit the function if there is an error
+            return; // Exit the function if there is an error // NOTE: Should probbaly log or alert() the user somehow if this has happened
         }
 
         setItems([...items, { listName: itemState, importance: category, id: id }]);
@@ -101,6 +101,7 @@ useEffect(() => {
 }, [items])
 
 
+    // NOTE: The `onMouseLeave` event is causing the list to clear when the mouse simply hovers it
     return (
         <nav className="flex justify-between items-center py-4">
             <h1 className='text-3xl pl-10 font-quicksand'>To-Do-List</h1>
