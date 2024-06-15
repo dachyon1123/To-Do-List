@@ -25,3 +25,4 @@ export default function ToDoList({ type, items, deleteButton }: ToDoListProps) {
         </section>
     )
 }
+
