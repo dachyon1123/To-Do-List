@@ -1,5 +1,4 @@
 import { useSortable } from "@dnd-kit/sortable"
-import { v4 as uuidv4 } from 'uuid';
 import { CSS } from "@dnd-kit/utilities"
 
 interface ListComponentProps {
@@ -14,7 +13,7 @@ interface ListComponentProps {
 
 function ListComponent({ item, index, deleteButton }: ListComponentProps) {
 
-    const id = uuidv4();
+    const id = item.id
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
 

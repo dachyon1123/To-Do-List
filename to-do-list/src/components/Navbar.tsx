@@ -17,9 +17,18 @@ export default function Navbar({ items, setItems }: NavbarProps) {
     const [catError, setCatError] = useState<string>('border-2 border-black');
     const [itemError, setItemError] = useState<string>('');
     const [id, setId] = useState<number>(() => {
+        let maxId = 0;
         const savedItems = localStorage.getItem('To-Do-List');
-        const list = savedItems ? JSON.parse(savedItems) : []
-        return list.length !== 0 ? list[list.length - 1].id + 1 : 0
+        const list = savedItems ? JSON.parse(savedItems) : [];
+    
+        if (list.length !== 0) {
+            maxId = list.reduce((max: number, item: { id: number }) => {
+                return item.id > max ? item.id : max;
+            }, 0);
+            return maxId + 1; // Ensure the new id is one greater than the current max id
+        } else {
+            return 1;
+        }
     });
     const [mouseDown, setMouseDown] = useState<number>(0);
     const [mouseUp, setMouseUp] = useState<number>(0);
@@ -71,7 +80,7 @@ export default function Navbar({ items, setItems }: NavbarProps) {
 
         if (pressTime > delay) {
             setItems([])
-            setId(0)
+            setId(1)
         }
     }, [mouseUp])
 
@@ -113,7 +122,7 @@ useEffect(() => {
 
             <section className="flex gap-4 pr-10">
                 <button className={`${longPress} text-xl border-black border-[1px] rounded-md p-2 ${effect}`} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>Clear List</button>
-                <button className="text-xl border-black border-[1px] rounded-md p-2">Copy List</button>
+                <button className="text-xl border-black border-[1px] rounded-md p-2" onClick={() => {navigator.clipboard.writeText(JSON.stringify(items))}}>Copy List</button>
             </section>
         </nav>
     )

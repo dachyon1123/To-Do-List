@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
-import { DndContext, closestCenter, closestCorners } from '@dnd-kit/core'
+import { useState } from 'react'
+import { DndContext, closestCorners, useSensor, useSensors, MouseSensor } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import './App.css'
 
 import Navbar from './components/Navbar'
@@ -18,17 +19,17 @@ function App() {
     id: number
   }
 
+
   function deleteButton(id: number) {
     let newArray: itemList[] = items.filter(item => item.id !== id);
-    console.log(newArray)
     setItems(newArray);
   }
 
-  function getItemPos(id:number) {
+  function getItemPos(id: number) {
     return items.findIndex(item => item.id === id);
   }
 
-  function handleDragEnd(event:any) {
+  function handleDragEnd(event: any) {
     const { active, over } = event
 
     if (active.id === over.id) {
@@ -43,16 +44,28 @@ function App() {
     })
   }
 
+  const mouseSensor = useSensor(MouseSensor, {
+    // Require the mouse to move by 10 pixels before activating
+    activationConstraint: {
+      distance: 10,
+    },
+  });
+
+  const sensors = useSensors(
+    mouseSensor
+  )
 
   return (
     <>
       <Navbar items={items} setItems={setItems} />
-      <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
-        <main className='flex'>
-            <ToDoList borderT="border-t-[1px]" borderR='border-r-[1px]' type="Least Important" deleteButton={deleteButton} items={items.filter(item => item.importance === 'leastImportant')} />
-            <ToDoList borderT='border-t-[1px]' borderR='border-r-[1px]' type="Important" deleteButton={deleteButton} items={items.filter(item => item.importance === 'important')} />
-            <ToDoList borderT='border-t-[1px]' borderR='' type="Very Important" deleteButton={deleteButton} items={items.filter(item => item.importance === 'veryImportant')} />
-        </main>
+      <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={sensors}>
+        <SortableContext items={items} strategy={verticalListSortingStrategy}>
+          <main className='flex'>
+            <ToDoList type="Least Important" deleteButton={deleteButton} items={items.filter(item => item.importance === 'leastImportant')} />
+            <ToDoList type="Important" deleteButton={deleteButton} items={items.filter(item => item.importance === 'important')} />
+            <ToDoList type="Very Important" deleteButton={deleteButton} items={items.filter(item => item.importance === 'veryImportant')} />
+          </main>
+        </SortableContext>
       </DndContext>
     </>
   )
