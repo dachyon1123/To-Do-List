@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { DndContext, closestCorners, useSensor, useSensors, MouseSensor } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import './App.css'
 
 import Navbar from './components/Navbar'
 import ToDoList from './components/ToDoList'

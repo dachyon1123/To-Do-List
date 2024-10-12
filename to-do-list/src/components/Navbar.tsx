@@ -67,7 +67,7 @@ export default function Navbar({ items, setItems }: NavbarProps) {
         }
 
         if (hasError) {
-            return; // Exit the function if there is an error
+            return; 
         }
 
         setItems([...items, { listName: itemState, importance: category, id: id }]);
@@ -92,6 +92,12 @@ export default function Navbar({ items, setItems }: NavbarProps) {
 
     function handleMouseUp() {
         setMouseUp(Date.now());
+        setLongPress('inital-background')
+        setEffect('bg-right')
+    }
+
+    function handleMouseLeave() {
+        setMouseUp(0)
         setLongPress('inital-background')
         setEffect('bg-right')
     }
@@ -121,7 +127,7 @@ useEffect(() => {
             </form>
 
             <section className="flex gap-4 pr-10">
-                <button className={`${longPress} text-xl border-black border-[1px] rounded-md p-2 ${effect}`} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>Clear List</button>
+                <button className={`${longPress} text-xl border-black border-[1px] rounded-md p-2 ${effect}`} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseLeave}>Clear List</button>
                 <button className="text-xl border-black border-[1px] rounded-md p-2" onClick={() => {navigator.clipboard.writeText(JSON.stringify(items))}}>Copy List</button>
             </section>
         </nav>
